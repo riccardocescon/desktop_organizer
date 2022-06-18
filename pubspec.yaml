@@ -1,4 +1,4 @@
-name: desktoop_organizer
+name: desktop_organizer
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -29,6 +29,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  window_size:
+    git:
+      url: https://github.com/google/flutter-desktop-embedding.git
+      path: plugins/window_size
 
 
   # The following adds the Cupertino Icons font to your application.

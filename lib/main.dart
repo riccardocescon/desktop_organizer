@@ -1,11 +1,17 @@
-import 'package:desktoop_organizer/pages/homepage.dart';
-import 'package:desktoop_organizer/utils/enums.dart';
-import 'package:desktoop_organizer/utils/navigation.dart';
-import 'package:desktoop_organizer/utils/style.dart';
+import 'dart:io';
+
+import 'package:desktop_organizer/pages/homepage.dart';
+import 'package:desktop_organizer/utils/navigation.dart';
+import 'package:desktop_organizer/utils/style.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:window_size/window_size.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    setWindowMinSize(const Size(1270, 720));
+  }
   runApp(
     MaterialApp(
       initialRoute: Navigation.homepage,
@@ -20,7 +26,7 @@ void main() {
             )),
         scaffoldBackgroundColor: backgroundColor,
       ),
-      scrollBehavior: MaterialScrollBehavior().copyWith(
+      scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {
           PointerDeviceKind.mouse,
           PointerDeviceKind.touch,

@@ -1,10 +1,12 @@
-import 'package:desktoop_organizer/models/scanned_item.dart';
-import 'package:desktoop_organizer/utils/enums.dart';
-import 'package:desktoop_organizer/utils/globals.dart';
-import 'package:desktoop_organizer/utils/style.dart';
-import 'package:desktoop_organizer/utils/widgets.dart';
-import 'package:desktoop_organizer/widgets/mouse_menu.dart';
-import 'package:desktoop_organizer/widgets/side_bar.dart';
+import 'dart:developer';
+
+import 'package:desktop_organizer/models/scanned_item.dart';
+import 'package:desktop_organizer/utils/enums.dart';
+import 'package:desktop_organizer/utils/globals.dart';
+import 'package:desktop_organizer/utils/style.dart';
+import 'package:desktop_organizer/utils/widgets.dart';
+import 'package:desktop_organizer/widgets/mouse_menu.dart';
+import 'package:desktop_organizer/widgets/side_bar.dart';
 import 'package:flutter/material.dart';
 
 class Homepage extends StatefulWidget {
@@ -69,20 +71,22 @@ class _HomepageState extends State<Homepage> {
   Widget _page() {
     return Padding(
       padding: const EdgeInsets.all(20),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(100),
-        child: Container(
-          padding: const EdgeInsets.all(40),
-          color: appbarColor,
-          child: GestureDetector(
-            onTap: () {
-              _hideMouseMenu();
-            },
-            child: Stack(
-              children: [
-                _itemsGrid(),
-                mouseMenu(),
-              ],
+      child: GestureDetector(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: Container(
+            padding: const EdgeInsets.all(40),
+            color: appbarColor,
+            child: GestureDetector(
+              onTap: () {
+                _hideMouseMenu();
+              },
+              child: Stack(
+                children: [
+                  _itemsGrid(),
+                  mouseMenu(),
+                ],
+              ),
             ),
           ),
         ),
@@ -98,18 +102,21 @@ class _HomepageState extends State<Homepage> {
         }
         return true;
       },
-      child: GridView.builder(
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 200,
-          mainAxisSpacing: 20,
-          crossAxisSpacing: 20,
+      child: _menuTapDetector(
+        menuType: MouseMenuType.emptySlot,
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 200,
+            mainAxisSpacing: 20,
+            crossAxisSpacing: 20,
+          ),
+          itemCount: files.length,
+          itemBuilder: (itemContext, index) {
+            return _gridViewItem(
+              files[index],
+            );
+          },
         ),
-        itemCount: files.length,
-        itemBuilder: (itemContext, index) {
-          return _gridViewItem(
-            files[index],
-          );
-        },
       ),
     );
   }
@@ -117,11 +124,8 @@ class _HomepageState extends State<Homepage> {
   Widget _gridViewItem(ScannedItem item) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(70),
-      child: GestureDetector(
-        onSecondaryTapDown: (details) {
-          getPosition(details);
-          _showMouseMenu();
-        },
+      child: _menuTapDetector(
+        menuType: MouseMenuType.file,
         child: SizedBox(
           width: 100,
           height: 100,
@@ -159,12 +163,37 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
-  void getPosition(TapDownDetails detail) {
+  Widget _menuTapDetector(
+      {required MouseMenuType menuType, required Widget child}) {
+    return GestureDetector(
+      onSecondaryTap: () {
+        _showMouseMenu(menuType: menuType);
+      },
+      onSecondaryTapDown: (details) {
+        getPosition(details, menuType);
+      },
+      child: child,
+    );
+  }
+
+  void getPosition(TapDownDetails detail, MouseMenuType menuType) async {
+    await Future.delayed(
+      const Duration(
+        milliseconds: mouseMenuAnimationTimeMS,
+      ),
+    );
     mousePosition = detail.globalPosition;
   }
 
-  void _showMouseMenu() {
+  void _showMouseMenu({required MouseMenuType menuType}) async {
+    _hideMouseMenu();
+    await Future.delayed(
+      const Duration(
+        milliseconds: mouseMenuAnimationTimeMS,
+      ),
+    );
     setState(() {
+      mouseMenuType = menuType;
       mouseMenuOpen = true;
     });
   }

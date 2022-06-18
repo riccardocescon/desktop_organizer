@@ -1,15 +1,21 @@
 enum PageType {
-  homepage,
-  anotherPage,
+  scanner,
+  virtualDesktop,
+  realDesktop,
+  typesDesktop,
 }
 
 extension PageTypeInfo on PageType {
   String get pageName {
     switch (this) {
-      case PageType.homepage:
-        return "Homepage";
-      case PageType.anotherPage:
-        return "Example";
+      case PageType.scanner:
+        return "Scanner";
+      case PageType.virtualDesktop:
+        return "Virtual Desktop";
+      case PageType.realDesktop:
+        return "Real Desktop";
+      case PageType.typesDesktop:
+        return "Types Dekstop";
     }
   }
 }
@@ -17,4 +23,10 @@ extension PageTypeInfo on PageType {
 enum ItemType {
   folder,
   file,
+}
+
+enum MouseMenuType {
+  emptySlot,
+  file,
+  folder,
 }

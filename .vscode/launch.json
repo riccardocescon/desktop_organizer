@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "desktoop_organizer",
+            "name": "desktop_organizer",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "desktoop_organizer (profile mode)",
+            "name": "desktop_organizer (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "desktoop_organizer (release mode)",
+            "name": "desktop_organizer (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

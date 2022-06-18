@@ -1,6 +1,6 @@
 {
-    "name": "desktoop_organizer",
-    "short_name": "desktoop_organizer",
+    "name": "desktop_organizer",
+    "short_name": "desktop_organizer",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
