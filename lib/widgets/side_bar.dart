@@ -6,42 +6,53 @@ import 'package:flutter/material.dart';
 
 const double _maxHeight = 80;
 
-Widget sideMenu({required BuildContext context}) {
+Widget sideMenu({
+  required BuildContext context,
+  required Function(PageType) onPageSelected,
+}) {
   return AnimatedContainer(
     duration: const Duration(milliseconds: 300),
     curve: Curves.easeInOutExpo,
     width: menuOpen ? _maxHeight * 4 : _maxHeight,
     height: MediaQuery.of(context).size.height,
     color: appbarColor,
-    child: _sideMenuIcons(context),
+    child: _sideMenuIcons(context, onPageSelected),
   );
 }
 
-Widget _sideMenuIcons(context) {
+Widget _sideMenuIcons(context, Function(PageType) onPageSelected) {
   return Column(
     children: [
       _sideMenuIcon(
         PageType.scanner,
         Icons.perm_scan_wifi,
-        () {},
+        () {
+          onPageSelected.call(PageType.scanner);
+        },
         context: context,
       ),
       _sideMenuIcon(
         PageType.virtualDesktop,
         Icons.home_rounded,
-        () {},
+        () {
+          onPageSelected.call(PageType.virtualDesktop);
+        },
         context: context,
       ),
       _sideMenuIcon(
         PageType.realDesktop,
         Icons.real_estate_agent,
-        () {},
+        () {
+          onPageSelected.call(PageType.realDesktop);
+        },
         context: context,
       ),
       _sideMenuIcon(
         PageType.typesDesktop,
         Icons.file_copy_sharp,
-        () {},
+        () {
+          onPageSelected.call(PageType.typesDesktop);
+        },
         context: context,
       ),
     ],
@@ -68,7 +79,9 @@ Widget _sideMenuIcon(
                   child: AspectRatio(
                     aspectRatio: 1,
                     child: MaterialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        onClick?.call();
+                      },
                       color: purple.withAlpha(page == pageType ? 200 : 100),
                       splashColor: purple,
                       hoverColor: purple.withAlpha(230),
