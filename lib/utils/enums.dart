@@ -1,5 +1,4 @@
 enum PageType {
-  scanner,
   virtualDesktop,
   realDesktop,
   typesDesktop,
@@ -8,8 +7,6 @@ enum PageType {
 extension PageTypeInfo on PageType {
   String get pageName {
     switch (this) {
-      case PageType.scanner:
-        return "Scanner";
       case PageType.virtualDesktop:
         return "Virtual Desktop";
       case PageType.realDesktop:

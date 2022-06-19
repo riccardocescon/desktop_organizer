@@ -20,10 +20,18 @@ void main() {
       },
       theme: ThemeData.dark().copyWith(
         appBarTheme: AppBarTheme(
-            backgroundColor: appbarColor,
-            toolbarTextStyle: TextStyle(
-              color: textColor,
-            )),
+          backgroundColor: appbarColor,
+          toolbarTextStyle: TextStyle(
+            color: textColor,
+          ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: MaterialStatePropertyAll(
+              purple,
+            ),
+          ),
+        ),
         scaffoldBackgroundColor: backgroundColor,
       ),
       scrollBehavior: const MaterialScrollBehavior().copyWith(

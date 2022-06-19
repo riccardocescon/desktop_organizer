@@ -1,5 +1,9 @@
+import 'dart:io';
+
+import 'package:desktop_organizer/models/file_view_data.dart';
 import 'package:desktop_organizer/models/scanned_item.dart';
 import 'package:desktop_organizer/utils/enums.dart';
+import 'package:desktop_organizer/utils/utils.dart';
 import 'package:flutter/material.dart';
 
 PageType page = PageType.virtualDesktop;
@@ -14,13 +18,14 @@ double mouseMenuWidth = 200;
 
 const int mouseMenuAnimationTimeMS = 200;
 
-List<ScannedItem> virtualDesktop = [
-  ScannedItem(
-    name: "School",
-    itemType: ItemType.folder,
-  ),
-  ScannedItem(
-    name: "es32.txt",
-    itemType: ItemType.file,
-  ),
-];
+FileViewData realDekstop = FileViewData(
+  root: Directory("C:\\"),
+  currentDirectory: Directory("C:\\"),
+  items: scanFolder(path: "C:\\"),
+);
+
+FileViewData virtualDesktop = FileViewData(
+  root: Directory("C:\\"),
+  currentDirectory: Directory("C:\\"),
+  items: [],
+);

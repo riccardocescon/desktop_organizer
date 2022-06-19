@@ -1,15 +1,21 @@
+import 'dart:io';
+
+import 'package:desktop_organizer/models/file_view_data.dart';
 import 'package:desktop_organizer/models/scanned_item.dart';
 import 'package:desktop_organizer/utils/enums.dart';
 import 'package:desktop_organizer/utils/globals.dart';
 import 'package:desktop_organizer/utils/style.dart';
+import 'package:desktop_organizer/utils/utils.dart';
 import 'package:desktop_organizer/utils/widgets.dart';
 import 'package:desktop_organizer/widgets/mouse_menu.dart';
 import 'package:flutter/material.dart';
 
 class FileView extends StatefulWidget {
-  FileView({super.key, required this.files});
+  FileView(
+      {super.key, required this.fileViewData, required this.onFolderChanged});
 
-  List<ScannedItem> files;
+  FileViewData fileViewData;
+  Function onFolderChanged;
 
   @override
   State<FileView> createState() => _FileViewState();
@@ -47,10 +53,10 @@ class _FileViewState extends State<FileView> {
             mainAxisSpacing: 20,
             crossAxisSpacing: 20,
           ),
-          itemCount: widget.files.length,
+          itemCount: widget.fileViewData.items.length,
           itemBuilder: (itemContext, index) {
             return _gridViewItem(
-              widget.files[index],
+              widget.fileViewData.items[index],
             );
           },
         ),
@@ -69,6 +75,13 @@ class _FileViewState extends State<FileView> {
           child: MaterialButton(
             onPressed: () {
               _hideMouseMenu();
+              if (item.itemType == ItemType.folder) {
+                setState(() {
+                  widget.fileViewData.items = scanFolder(path: item.path);
+                  widget.fileViewData.currentDirectory = Directory(item.path);
+                  widget.onFolderChanged.call();
+                });
+              }
             },
             color: purple.withAlpha(100),
             hoverColor: purple.withAlpha(130),
@@ -88,7 +101,7 @@ class _FileViewState extends State<FileView> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: text(
-                      item.name,
+                      item.getName(),
                     ),
                   ),
                 ),

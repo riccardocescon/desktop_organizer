@@ -24,14 +24,6 @@ Widget _sideMenuIcons(context, Function(PageType) onPageSelected) {
   return Column(
     children: [
       _sideMenuIcon(
-        PageType.scanner,
-        Icons.perm_scan_wifi,
-        () {
-          onPageSelected.call(PageType.scanner);
-        },
-        context: context,
-      ),
-      _sideMenuIcon(
         PageType.virtualDesktop,
         Icons.home_rounded,
         () {
