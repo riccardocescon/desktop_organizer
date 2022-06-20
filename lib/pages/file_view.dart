@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:desktop_organizer/models/file_view_data.dart';
+import 'package:desktop_organizer/models/item.dart';
 import 'package:desktop_organizer/models/scanned_item.dart';
 import 'package:desktop_organizer/utils/enums.dart';
 import 'package:desktop_organizer/utils/globals.dart';
@@ -31,7 +32,11 @@ class _FileViewState extends State<FileView> {
       child: Stack(
         children: [
           _itemsGrid(),
-          mouseMenu(),
+          mouseMenu(
+            onEventCompleted: () {
+              setState(() {});
+            },
+          ),
         ],
       ),
     );
@@ -53,10 +58,10 @@ class _FileViewState extends State<FileView> {
             mainAxisSpacing: 20,
             crossAxisSpacing: 20,
           ),
-          itemCount: widget.fileViewData.items.length,
+          itemCount: widget.fileViewData.getItems().length,
           itemBuilder: (itemContext, index) {
             return _gridViewItem(
-              widget.fileViewData.items[index],
+              widget.fileViewData.getItems()[index],
             );
           },
         ),
@@ -64,7 +69,7 @@ class _FileViewState extends State<FileView> {
     );
   }
 
-  Widget _gridViewItem(ScannedItem item) {
+  Widget _gridViewItem(Item item) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(70),
       child: _menuTapDetector(
@@ -77,8 +82,8 @@ class _FileViewState extends State<FileView> {
               _hideMouseMenu();
               if (item.itemType == ItemType.folder) {
                 setState(() {
-                  widget.fileViewData.items = scanFolder(path: item.path);
-                  widget.fileViewData.currentDirectory = Directory(item.path);
+                  //widget.fileViewData.items = scanFolder(path: item.path);
+                  //widget.fileViewData.currentDirectory = Directory(item.path);
                   widget.onFolderChanged.call();
                 });
               }
@@ -101,7 +106,7 @@ class _FileViewState extends State<FileView> {
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 20),
                     child: text(
-                      item.getName(),
+                      item.name,
                     ),
                   ),
                 ),

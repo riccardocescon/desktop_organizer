@@ -6,7 +6,7 @@ import 'package:desktop_organizer/utils/style.dart';
 import 'package:desktop_organizer/utils/widgets.dart';
 import 'package:flutter/material.dart';
 
-Widget mouseMenu() {
+Widget mouseMenu({required Function onEventCompleted}) {
   if (mousePosition == null) return Container();
   return Positioned(
     left: mousePosition!.dx - sideMenuLength - 40,
@@ -19,10 +19,13 @@ Widget mouseMenu() {
           duration: const Duration(milliseconds: mouseMenuAnimationTimeMS),
           curve: Curves.easeInOutExpo,
           width: mouseMenuWidth,
-          height: mouseMenuOpen ? 50 * _getMenu().length.toDouble() : 0,
+          height: mouseMenuOpen
+              ? 50 *
+                  _getMenu(onEventCompleted: onEventCompleted).length.toDouble()
+              : 0,
           color: backgroundColor,
           child: Column(
-            children: _getMenu(),
+            children: _getMenu(onEventCompleted: onEventCompleted),
           ),
         ),
       ),
@@ -33,13 +36,16 @@ Widget mouseMenu() {
 Widget _mouseMenuItem(
   IconData icon,
   String name, {
+  required Function onClick,
   Color? color,
   Color? hoverColor,
   Color? splashColor,
 }) {
   return Expanded(
     child: MaterialButton(
-      onPressed: () {},
+      onPressed: () {
+        onClick.call();
+      },
       color: color ?? backgroundColor,
       hoverColor: hoverColor ?? purple.withAlpha(180),
       splashColor: splashColor ?? purple,
@@ -61,61 +67,84 @@ Widget _mouseMenuItem(
   );
 }
 
-List<Widget> _getMenu() {
+List<Widget> _getMenu({required Function onEventCompleted}) {
   return mouseMenuType == MouseMenuType.emptySlot
-      ? _emptyMenu
+      ? _emptyMenu(onEventCompleted: onEventCompleted)
       : mouseMenuType == MouseMenuType.file
-          ? _filesMenu
-          : _folderMenu;
+          ? _filesMenu(onEventCompleted: onEventCompleted)
+          : _folderMenu(onEventCompleted: onEventCompleted);
 }
 
-List<Widget> _emptyMenu = [
-  _mouseMenuItem(
-    Icons.create_new_folder_rounded,
-    "Create Folder",
-  ),
-];
+List<Widget> _emptyMenu({required Function onEventCompleted}) {
+  return [
+    _mouseMenuItem(
+      Icons.create_new_folder_rounded,
+      "Create Folder",
+      onClick: () {
+        // TODO _ request name and create folder
+        currentPage.addDirectory("${currentPage.getRoot()}\\Test\\Marco\\Ciao");
+        currentPage
+            .addDirectory("${currentPage.getRoot()}\\Test2\\Marco\\Ciao");
+        currentPage
+            .addDirectory("${currentPage.getRoot()}\\Test\\Marco\\Proca");
+        onEventCompleted.call();
+      },
+    ),
+  ];
+}
 
-List<Widget> _filesMenu = [
-  _mouseMenuItem(
-    Icons.near_me_rounded,
-    "Move To",
-  ),
-  _mouseMenuItem(
-    Icons.text_snippet_outlined,
-    "Rename",
-  ),
-  _mouseMenuItem(
-    Icons.color_lens_rounded,
-    "Set Color",
-  ),
-  _mouseMenuItem(
-    Icons.delete_rounded,
-    "Delete",
-    color: Colors.red.withAlpha(180),
-    hoverColor: Colors.red,
-    splashColor: Colors.redAccent,
-  ),
-];
+List<Widget> _filesMenu({required Function onEventCompleted}) {
+  return [
+    _mouseMenuItem(
+      Icons.near_me_rounded,
+      "Move To",
+      onClick: () {},
+    ),
+    _mouseMenuItem(
+      Icons.text_snippet_outlined,
+      "Rename",
+      onClick: () {},
+    ),
+    _mouseMenuItem(
+      Icons.color_lens_rounded,
+      "Set Color",
+      onClick: () {},
+    ),
+    _mouseMenuItem(
+      Icons.delete_rounded,
+      "Delete",
+      color: Colors.red.withAlpha(180),
+      hoverColor: Colors.red,
+      splashColor: Colors.redAccent,
+      onClick: () {},
+    ),
+  ];
+}
 
-List<Widget> _folderMenu = [
-  _mouseMenuItem(
-    Icons.near_me_rounded,
-    "Move To",
-  ),
-  _mouseMenuItem(
-    Icons.text_snippet_outlined,
-    "Rename",
-  ),
-  _mouseMenuItem(
-    Icons.color_lens_rounded,
-    "Set Color",
-  ),
-  _mouseMenuItem(
-    Icons.delete_rounded,
-    "Delete",
-    color: Colors.red.withAlpha(180),
-    hoverColor: Colors.red,
-    splashColor: Colors.redAccent,
-  ),
-];
+List<Widget> _folderMenu({required Function onEventCompleted}) {
+  return [
+    _mouseMenuItem(
+      Icons.near_me_rounded,
+      "Move To",
+      onClick: () {},
+    ),
+    _mouseMenuItem(
+      Icons.text_snippet_outlined,
+      "Rename",
+      onClick: () {},
+    ),
+    _mouseMenuItem(
+      Icons.color_lens_rounded,
+      "Set Color",
+      onClick: () {},
+    ),
+    _mouseMenuItem(
+      Icons.delete_rounded,
+      "Delete",
+      color: Colors.red.withAlpha(180),
+      hoverColor: Colors.red,
+      splashColor: Colors.redAccent,
+      onClick: () {},
+    ),
+  ];
+}

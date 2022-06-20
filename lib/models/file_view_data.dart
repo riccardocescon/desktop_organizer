@@ -1,39 +1,68 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:desktop_organizer/models/file_structure.dart';
+import 'package:desktop_organizer/models/item.dart';
 import 'package:desktop_organizer/models/scanned_item.dart';
-import 'package:flutter/cupertino.dart';
 
 class FileViewData {
-  Directory root;
-  Directory currentDirectory;
-  List<ScannedItem> items;
-  final List<String> _fileStructure = [];
-  final List<String> _dirStructure = [];
-  FileViewData({
-    required this.root,
-    required this.currentDirectory,
-    required this.items,
-  });
-
-  void addFolder(String path) {
-    _dirStructure.add(
-      path,
-    );
+  late FileStructure _fileStructure;
+  FileViewData() {
+    _fileStructure = FileStructure(name: "C:\\", parent: null);
   }
 
-  void removeFolder(String path) {
-    _dirStructure.removeWhere((element) => path == path);
+  String getRoot() {
+    return _fileStructure.name;
   }
 
-  void addFile(String path) {
-    _fileStructure.add(
-      path,
-    );
+  List<ScannedItem> getChildsItems() {
+    return _fileStructure.childFiles;
   }
 
-  void removeFile(String path) {
-    _fileStructure.removeWhere((element) => path == path);
+  List<Item> getItems() {
+    List<Item> items = [];
+    for (var current in _fileStructure.childDirs) {
+      items.add(current);
+    }
+    for (var current in _fileStructure.childFiles) {
+      items.add(current);
+    }
+    return items;
+  }
+
+  void addDirectory(String path) {
+    List<String> parts = path.split("\\");
+    assert(parts.length > 1);
+
+    FileStructure reference = _fileStructure;
+    for (int i = 2; i < parts.length; i++) {
+      if (parts[i].isEmpty) continue;
+      var folderRes = _folderExists(
+        folderName: parts[i],
+        parentPath: reference,
+      );
+      if (folderRes == null) {
+        FileStructure pathFolder =
+            FileStructure(name: parts[i], parent: reference);
+        reference.childDirs.add(pathFolder);
+        reference = pathFolder;
+        //log("Created folder: ${parts[i]}");
+      } else {
+        reference = folderRes;
+        //log("Skipped folder: ${parts[i]}");
+      }
+    }
+    log("Saved with path: ${reference.getAbsolutePath()}");
+  }
+
+  FileStructure? _folderExists({
+    required String folderName,
+    required FileStructure parentPath,
+  }) {
+    for (var current in parentPath.childDirs) {
+      if (current.name.replaceAll("\\", "") == folderName) return current;
+    }
+    return null;
   }
 }
 

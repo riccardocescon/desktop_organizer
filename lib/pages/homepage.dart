@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:desktop_organizer/models/file_view_data.dart';
@@ -20,8 +19,6 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  FileViewData _currentPage = virtualDesktop;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,9 +59,9 @@ class _HomepageState extends State<Homepage> {
                 setState(() {
                   page = pageSelected;
                   if (page == PageType.realDesktop) {
-                    _currentPage = realDekstop;
+                    currentPage = realDekstop;
                   } else if (page == PageType.virtualDesktop) {
-                    _currentPage = virtualDesktop;
+                    currentPage = virtualDesktop;
                   }
                 });
               },
@@ -94,23 +91,22 @@ class _HomepageState extends State<Homepage> {
                   String? path = await FilesystemPicker.open(
                     title: 'Navigation Folder',
                     context: context,
-                    rootDirectory:
-                        Directory(_currentPage.currentDirectory.path),
+                    rootDirectory: Directory(currentPage.getRoot()),
                     fsType: FilesystemType.folder,
                     pickText: 'Select Folder',
                     folderIconColor: purple,
                   );
                   if (path == null) return;
                   setState(() {
-                    _currentPage.currentDirectory = Directory(path);
-                    _currentPage.items = scanFolder(path: path);
+                    //currentPage.currentDirectory = Directory(path);
+                    //currentPage.items = scanFolder(path: path);
                   });
                 },
                 color: appbarColor.withAlpha(200),
                 hoverColor: purple,
                 splashColor: Colors.deepPurpleAccent,
                 child: text(
-                  _currentPage.currentDirectory.name,
+                  currentPage.getRoot(),
                   color: textColor,
                   fontSize: 30,
                   textAlign: TextAlign.center,
@@ -131,9 +127,11 @@ class _HomepageState extends State<Homepage> {
       child: Stack(
         children: [
           Visibility(
-            visible: _currentPage.items.isEmpty
+            /*
+            visible: currentPage.items.isEmpty
                 ? false
-                : _currentPage.items.first.parent.path != "C:\\",
+                : currentPage.items.first.parent.path != "C:\\",
+                */
             child: IconButton(
               icon: Icon(
                 Icons.arrow_back_rounded,
@@ -143,11 +141,13 @@ class _HomepageState extends State<Homepage> {
               padding: EdgeInsets.zero,
               onPressed: () {
                 setState(() {
-                  _currentPage.items = scanFolder(
-                    path: _currentPage.items.first.parent.parent.path,
+                  /*
+                  currentPage.items = scanFolder(
+                    path: currentPage.items.first.parent.parent.path,
                   );
-                  _currentPage.currentDirectory =
-                      _currentPage.currentDirectory.parent;
+                  currentPage.currentDirectory =
+                      currentPage.currentDirectory.parent;
+                      */
                 });
               },
             ),

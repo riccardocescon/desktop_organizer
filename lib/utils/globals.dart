@@ -18,14 +18,8 @@ double mouseMenuWidth = 200;
 
 const int mouseMenuAnimationTimeMS = 200;
 
-FileViewData realDekstop = FileViewData(
-  root: Directory("C:\\"),
-  currentDirectory: Directory("C:\\"),
-  items: scanFolder(path: "C:\\"),
-);
+FileViewData realDekstop = FileViewData();
 
-FileViewData virtualDesktop = FileViewData(
-  root: Directory("C:\\"),
-  currentDirectory: Directory("C:\\"),
-  items: [],
-);
+FileViewData virtualDesktop = FileViewData();
+
+FileViewData currentPage = virtualDesktop;
