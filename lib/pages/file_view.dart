@@ -7,15 +7,14 @@ import 'package:desktop_organizer/utils/enums.dart';
 import 'package:desktop_organizer/utils/globals.dart';
 import 'package:desktop_organizer/utils/style.dart';
 import 'package:desktop_organizer/utils/utils.dart';
+import 'package:desktop_organizer/utils/virtual_desktop_helper.dart';
 import 'package:desktop_organizer/utils/widgets.dart';
 import 'package:desktop_organizer/widgets/mouse_menu.dart';
 import 'package:flutter/material.dart';
 
 class FileView extends StatefulWidget {
-  FileView(
-      {super.key, required this.fileViewData, required this.onFolderChanged});
+  FileView({super.key, required this.onFolderChanged});
 
-  FileViewData fileViewData;
   Function onFolderChanged;
 
   @override
@@ -58,10 +57,10 @@ class _FileViewState extends State<FileView> {
             mainAxisSpacing: 20,
             crossAxisSpacing: 20,
           ),
-          itemCount: widget.fileViewData.getItems().length,
+          itemCount: VirtualDesktopHelper().getItems().length,
           itemBuilder: (itemContext, index) {
             return _gridViewItem(
-              widget.fileViewData.getItems()[index],
+              VirtualDesktopHelper().getItems()[index],
             );
           },
         ),
@@ -82,6 +81,8 @@ class _FileViewState extends State<FileView> {
               _hideMouseMenu();
               if (item.itemType == ItemType.folder) {
                 setState(() {
+                  VirtualDesktopHelper().openDirectory(item.getAbsolutePath());
+                  //widget.items =
                   //widget.fileViewData.items = scanFolder(path: item.path);
                   //widget.fileViewData.currentDirectory = Directory(item.path);
                   widget.onFolderChanged.call();

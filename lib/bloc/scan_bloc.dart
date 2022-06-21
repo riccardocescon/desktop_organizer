@@ -36,7 +36,7 @@ class ScanBloc extends Bloc<ScanEvent, ScanState> {
         ScannedItem(
           path: current.path,
           itemType: current is File ? ItemType.file : ItemType.folder,
-          parent: current.parent,
+          scannedItemParent: current.parent,
         ),
       );
     }

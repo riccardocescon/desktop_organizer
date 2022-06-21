@@ -19,7 +19,3 @@ double mouseMenuWidth = 200;
 const int mouseMenuAnimationTimeMS = 200;
 
 FileViewData realDekstop = FileViewData();
-
-FileViewData virtualDesktop = FileViewData();
-
-FileViewData currentPage = virtualDesktop;

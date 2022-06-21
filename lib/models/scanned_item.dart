@@ -6,12 +6,16 @@ import 'package:desktop_organizer/utils/enums.dart';
 class ScannedItem extends Item {
   String path;
   List<ScannedItem> childs = [];
-  Directory parent;
+  Directory scannedItemParent;
   ScannedItem({
     required this.path,
     required ItemType itemType,
-    required this.parent,
-  }) : super(name: path.split("\\").last, itemType: ItemType.file);
+    required this.scannedItemParent,
+  }) : super(
+          name: path.split("\\").last,
+          itemType: ItemType.file,
+          parent: null,
+        );
 
   String getName() {
     return path.split("\\").last;

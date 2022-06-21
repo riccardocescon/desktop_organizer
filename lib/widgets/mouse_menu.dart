@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:desktop_organizer/utils/enums.dart';
 import 'package:desktop_organizer/utils/globals.dart';
 import 'package:desktop_organizer/utils/style.dart';
+import 'package:desktop_organizer/utils/virtual_desktop_helper.dart';
 import 'package:desktop_organizer/utils/widgets.dart';
 import 'package:flutter/material.dart';
 
@@ -82,11 +83,12 @@ List<Widget> _emptyMenu({required Function onEventCompleted}) {
       "Create Folder",
       onClick: () {
         // TODO _ request name and create folder
-        currentPage.addDirectory("${currentPage.getRoot()}\\Test\\Marco\\Ciao");
-        currentPage
-            .addDirectory("${currentPage.getRoot()}\\Test2\\Marco\\Ciao");
-        currentPage
-            .addDirectory("${currentPage.getRoot()}\\Test\\Marco\\Proca");
+        VirtualDesktopHelper().addDirectory(
+            "${VirtualDesktopHelper().getRoot()}\\Test\\Marco\\Ciao");
+        VirtualDesktopHelper().addDirectory(
+            "${VirtualDesktopHelper().getRoot()}\\Test2\\Marco\\Ciao");
+        VirtualDesktopHelper().addDirectory(
+            "${VirtualDesktopHelper().getRoot()}\\Test\\Marco\\Proca");
         onEventCompleted.call();
       },
     ),

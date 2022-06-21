@@ -8,7 +8,11 @@ import 'package:desktop_organizer/models/scanned_item.dart';
 class FileViewData {
   late FileStructure _fileStructure;
   FileViewData() {
-    _fileStructure = FileStructure(name: "C:\\", parent: null);
+    _fileStructure = FileStructure(name: "C:\\", fileStructureparent: null);
+  }
+
+  FileStructure getStructure() {
+    return _fileStructure;
   }
 
   String getRoot() {
@@ -43,7 +47,7 @@ class FileViewData {
       );
       if (folderRes == null) {
         FileStructure pathFolder =
-            FileStructure(name: parts[i], parent: reference);
+            FileStructure(name: parts[i], fileStructureparent: reference);
         reference.childDirs.add(pathFolder);
         reference = pathFolder;
         //log("Created folder: ${parts[i]}");
@@ -53,6 +57,33 @@ class FileViewData {
       }
     }
     log("Saved with path: ${reference.getAbsolutePath()}");
+  }
+
+  List<Item> getItemsPath({required String absolutePath}) {
+    List<String> parts = absolutePath.split("\\");
+    assert(parts.length > 1);
+
+    FileStructure reference = _fileStructure;
+    for (int i = 2; i < parts.length; i++) {
+      if (parts[i].isEmpty) continue;
+      var folderRes = _folderExists(
+        folderName: parts[i],
+        parentPath: reference,
+      );
+      if (folderRes == null) {
+        throw ("Folder ${parts[i]} not found!");
+      } else {
+        reference = folderRes;
+      }
+    }
+    List<Item> items = [];
+    for (var current in reference.childDirs) {
+      items.add(current);
+    }
+    for (var current in reference.childFiles) {
+      items.add(current);
+    }
+    return items;
   }
 
   FileStructure? _folderExists({

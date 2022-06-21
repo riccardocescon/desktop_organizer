@@ -17,19 +17,24 @@ import 'package:desktop_organizer/models/scanned_item.dart';
 import 'package:desktop_organizer/utils/enums.dart';
 
 class FileStructure extends Item {
-  FileStructure? parent;
+  FileStructure? fileStructureparent;
   List<FileStructure> childDirs = [];
   List<ScannedItem> childFiles = [];
-  FileStructure({required String name, required this.parent})
-      : super(name: name, itemType: ItemType.folder);
+  FileStructure({required String name, required this.fileStructureparent})
+      : super(
+            name: name, itemType: ItemType.folder, parent: fileStructureparent);
 
   FileStructure.clone(FileStructure source)
-      : super(name: source.name, itemType: ItemType.folder) {
-    parent = source.parent == null
+      : super(
+            name: source.name,
+            itemType: ItemType.folder,
+            parent: source.fileStructureparent) {
+    fileStructureparent = source.fileStructureparent == null
         ? null
         : FileStructure(
             name: source.name,
-            parent: FileStructure.clone(source.parent!),
+            fileStructureparent:
+                FileStructure.clone(source.fileStructureparent!),
           );
     for (var current in source.childDirs) {
       childDirs.add(
@@ -38,11 +43,14 @@ class FileStructure extends Item {
     }
   }
 
-  String getAbsolutePath() {
-    if (parent == null) {
-      return name;
-    } else {
-      return "${parent!.getAbsolutePath()}\\$name";
+  List<Item> getItems() {
+    List<Item> items = [];
+    for (var current in childDirs) {
+      items.add(current);
     }
+    for (var current in childFiles) {
+      items.add(current);
+    }
+    return items;
   }
 }

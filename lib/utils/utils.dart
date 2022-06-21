@@ -13,7 +13,7 @@ List<ScannedItem> scanFolder({required String path}) {
       ScannedItem(
         path: current.path,
         itemType: current is File ? ItemType.file : ItemType.folder,
-        parent: current.parent,
+        scannedItemParent: current.parent,
       ),
     );
   }

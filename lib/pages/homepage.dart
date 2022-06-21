@@ -1,11 +1,10 @@
 import 'dart:io';
 
-import 'package:desktop_organizer/models/file_view_data.dart';
 import 'package:desktop_organizer/pages/file_view.dart';
 import 'package:desktop_organizer/utils/enums.dart';
 import 'package:desktop_organizer/utils/globals.dart';
 import 'package:desktop_organizer/utils/style.dart';
-import 'package:desktop_organizer/utils/utils.dart';
+import 'package:desktop_organizer/utils/virtual_desktop_helper.dart';
 import 'package:desktop_organizer/utils/widgets.dart';
 import 'package:desktop_organizer/widgets/side_bar.dart';
 import 'package:filesystem_picker/filesystem_picker.dart';
@@ -59,9 +58,9 @@ class _HomepageState extends State<Homepage> {
                 setState(() {
                   page = pageSelected;
                   if (page == PageType.realDesktop) {
-                    currentPage = realDekstop;
+                    //currentPage = realDekstop;
                   } else if (page == PageType.virtualDesktop) {
-                    currentPage = virtualDesktop;
+                    //currentPage = virtualDesktop;
                   }
                 });
               },
@@ -91,7 +90,7 @@ class _HomepageState extends State<Homepage> {
                   String? path = await FilesystemPicker.open(
                     title: 'Navigation Folder',
                     context: context,
-                    rootDirectory: Directory(currentPage.getRoot()),
+                    rootDirectory: Directory(VirtualDesktopHelper().getRoot()),
                     fsType: FilesystemType.folder,
                     pickText: 'Select Folder',
                     folderIconColor: purple,
@@ -106,7 +105,8 @@ class _HomepageState extends State<Homepage> {
                 hoverColor: purple,
                 splashColor: Colors.deepPurpleAccent,
                 child: text(
-                  currentPage.getRoot(),
+                  "C:\\",
+                  //currentPage.getRoot(),
                   color: textColor,
                   fontSize: 30,
                   textAlign: TextAlign.center,
@@ -127,11 +127,7 @@ class _HomepageState extends State<Homepage> {
       child: Stack(
         children: [
           Visibility(
-            /*
-            visible: currentPage.items.isEmpty
-                ? false
-                : currentPage.items.first.parent.path != "C:\\",
-                */
+            visible: VirtualDesktopHelper().isOnRoot,
             child: IconButton(
               icon: Icon(
                 Icons.arrow_back_rounded,
@@ -141,13 +137,7 @@ class _HomepageState extends State<Homepage> {
               padding: EdgeInsets.zero,
               onPressed: () {
                 setState(() {
-                  /*
-                  currentPage.items = scanFolder(
-                    path: currentPage.items.first.parent.parent.path,
-                  );
-                  currentPage.currentDirectory =
-                      currentPage.currentDirectory.parent;
-                      */
+                  VirtualDesktopHelper().parentDirectory();
                 });
               },
             ),
@@ -176,11 +166,9 @@ class _HomepageState extends State<Homepage> {
   Widget _getPageView() {
     return page == PageType.virtualDesktop
         ? FileView(
-            fileViewData: virtualDesktop,
             onFolderChanged: _onFolderChanged,
           )
         : FileView(
-            fileViewData: realDekstop,
             onFolderChanged: _onFolderChanged,
           );
   }
