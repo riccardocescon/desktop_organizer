@@ -10,33 +10,31 @@ Es:
 
 */
 
-import 'dart:developer';
-
 import 'package:desktop_organizer/models/item.dart';
-import 'package:desktop_organizer/models/scanned_item.dart';
 import 'package:desktop_organizer/utils/enums.dart';
 
 class FileStructure extends Item {
-  FileStructure? fileStructureparent;
   List<FileStructure> childDirs = [];
-  List<ScannedItem> childFiles = [];
-  FileStructure({required String name, required this.fileStructureparent})
+  List<FileStructure> childFiles = [];
+  FileStructure({required String name, required Item? parent})
       : super(
-            name: name, itemType: ItemType.folder, parent: fileStructureparent);
+          name: name,
+          itemType: ItemType.folder,
+          parent: parent,
+        );
 
   FileStructure.clone(FileStructure source)
       : super(
-            name: source.name,
-            itemType: ItemType.folder,
-            parent: source.fileStructureparent) {
-    fileStructureparent = source.fileStructureparent == null
-        ? null
-        : FileStructure(
-            name: source.name,
-            fileStructureparent:
-                FileStructure.clone(source.fileStructureparent!),
-          );
+          name: source.name,
+          itemType: ItemType.folder,
+          parent: source.parent,
+        ) {
     for (var current in source.childDirs) {
+      childDirs.add(
+        FileStructure.clone(current),
+      );
+    }
+    for (var current in source.childFiles) {
       childDirs.add(
         FileStructure.clone(current),
       );

@@ -1,3 +1,14 @@
+enum ItemType {
+  folder,
+  file,
+}
+
+enum MouseMenuType {
+  emptySlot,
+  file,
+  folder,
+}
+
 enum PageType {
   virtualDesktop,
   realDesktop,
@@ -15,15 +26,4 @@ extension PageTypeInfo on PageType {
         return "Types Dekstop";
     }
   }
-}
-
-enum ItemType {
-  folder,
-  file,
-}
-
-enum MouseMenuType {
-  emptySlot,
-  file,
-  folder,
 }

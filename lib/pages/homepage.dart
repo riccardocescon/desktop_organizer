@@ -57,11 +57,6 @@ class _HomepageState extends State<Homepage> {
               onPageSelected: (pageSelected) {
                 setState(() {
                   page = pageSelected;
-                  if (page == PageType.realDesktop) {
-                    //currentPage = realDekstop;
-                  } else if (page == PageType.virtualDesktop) {
-                    //currentPage = virtualDesktop;
-                  }
                 });
               },
             ),
@@ -119,6 +114,36 @@ class _HomepageState extends State<Homepage> {
     );
   }
 
+  Widget _getPageView() {
+    return page == PageType.virtualDesktop
+        ? FileView(
+            onFolderChanged: _onFolderChanged,
+          )
+        : FileView(
+            onFolderChanged: _onFolderChanged,
+          );
+  }
+
+  void _onFolderChanged() {
+    setState(() {});
+  }
+
+  Widget _page() {
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: GestureDetector(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(100),
+          child: Container(
+            padding: const EdgeInsets.all(40),
+            color: appbarColor,
+            child: _getPageView(),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _topBar() {
     return Container(
       width: MediaQuery.of(context).size.width,
@@ -145,35 +170,5 @@ class _HomepageState extends State<Homepage> {
         ],
       ),
     );
-  }
-
-  Widget _page() {
-    return Padding(
-      padding: const EdgeInsets.all(20),
-      child: GestureDetector(
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(100),
-          child: Container(
-            padding: const EdgeInsets.all(40),
-            color: appbarColor,
-            child: _getPageView(),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _getPageView() {
-    return page == PageType.virtualDesktop
-        ? FileView(
-            onFolderChanged: _onFolderChanged,
-          )
-        : FileView(
-            onFolderChanged: _onFolderChanged,
-          );
-  }
-
-  void _onFolderChanged() {
-    setState(() {});
   }
 }

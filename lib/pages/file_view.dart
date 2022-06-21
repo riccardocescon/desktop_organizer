@@ -1,21 +1,16 @@
-import 'dart:io';
-
-import 'package:desktop_organizer/models/file_view_data.dart';
 import 'package:desktop_organizer/models/item.dart';
-import 'package:desktop_organizer/models/scanned_item.dart';
 import 'package:desktop_organizer/utils/enums.dart';
 import 'package:desktop_organizer/utils/globals.dart';
 import 'package:desktop_organizer/utils/style.dart';
-import 'package:desktop_organizer/utils/utils.dart';
 import 'package:desktop_organizer/utils/virtual_desktop_helper.dart';
 import 'package:desktop_organizer/utils/widgets.dart';
 import 'package:desktop_organizer/widgets/mouse_menu.dart';
 import 'package:flutter/material.dart';
 
 class FileView extends StatefulWidget {
-  FileView({super.key, required this.onFolderChanged});
+  final Function onFolderChanged;
 
-  Function onFolderChanged;
+  const FileView({super.key, required this.onFolderChanged});
 
   @override
   State<FileView> createState() => _FileViewState();
@@ -41,31 +36,13 @@ class _FileViewState extends State<FileView> {
     );
   }
 
-  Widget _itemsGrid() {
-    return NotificationListener(
-      onNotification: (notification) {
-        if (notification is ScrollUpdateNotification) {
-          _hideMouseMenu();
-        }
-        return true;
-      },
-      child: _menuTapDetector(
-        menuType: MouseMenuType.emptySlot,
-        child: GridView.builder(
-          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-            maxCrossAxisExtent: 200,
-            mainAxisSpacing: 20,
-            crossAxisSpacing: 20,
-          ),
-          itemCount: VirtualDesktopHelper().getItems().length,
-          itemBuilder: (itemContext, index) {
-            return _gridViewItem(
-              VirtualDesktopHelper().getItems()[index],
-            );
-          },
-        ),
+  void getPosition(TapDownDetails detail, MouseMenuType menuType) async {
+    await Future.delayed(
+      const Duration(
+        milliseconds: mouseMenuAnimationTimeMS,
       ),
     );
+    mousePosition = detail.globalPosition;
   }
 
   Widget _gridViewItem(Item item) {
@@ -119,6 +96,39 @@ class _FileViewState extends State<FileView> {
     );
   }
 
+  void _hideMouseMenu() {
+    setState(() {
+      mouseMenuOpen = false;
+    });
+  }
+
+  Widget _itemsGrid() {
+    return NotificationListener(
+      onNotification: (notification) {
+        if (notification is ScrollUpdateNotification) {
+          _hideMouseMenu();
+        }
+        return true;
+      },
+      child: _menuTapDetector(
+        menuType: MouseMenuType.emptySlot,
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 200,
+            mainAxisSpacing: 20,
+            crossAxisSpacing: 20,
+          ),
+          itemCount: VirtualDesktopHelper().getItems().length,
+          itemBuilder: (itemContext, index) {
+            return _gridViewItem(
+              VirtualDesktopHelper().getItems()[index],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
   Widget _menuTapDetector(
       {required MouseMenuType menuType, required Widget child}) {
     return GestureDetector(
@@ -132,15 +142,6 @@ class _FileViewState extends State<FileView> {
     );
   }
 
-  void getPosition(TapDownDetails detail, MouseMenuType menuType) async {
-    await Future.delayed(
-      const Duration(
-        milliseconds: mouseMenuAnimationTimeMS,
-      ),
-    );
-    mousePosition = detail.globalPosition;
-  }
-
   void _showMouseMenu({required MouseMenuType menuType}) async {
     _hideMouseMenu();
     await Future.delayed(
@@ -151,12 +152,6 @@ class _FileViewState extends State<FileView> {
     setState(() {
       mouseMenuType = menuType;
       mouseMenuOpen = true;
-    });
-  }
-
-  void _hideMouseMenu() {
-    setState(() {
-      mouseMenuOpen = false;
     });
   }
 }

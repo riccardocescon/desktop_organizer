@@ -20,37 +20,6 @@ Widget sideMenu({
   );
 }
 
-Widget _sideMenuIcons(context, Function(PageType) onPageSelected) {
-  return Column(
-    children: [
-      _sideMenuIcon(
-        PageType.virtualDesktop,
-        Icons.home_rounded,
-        () {
-          onPageSelected.call(PageType.virtualDesktop);
-        },
-        context: context,
-      ),
-      _sideMenuIcon(
-        PageType.realDesktop,
-        Icons.real_estate_agent,
-        () {
-          onPageSelected.call(PageType.realDesktop);
-        },
-        context: context,
-      ),
-      _sideMenuIcon(
-        PageType.typesDesktop,
-        Icons.file_copy_sharp,
-        () {
-          onPageSelected.call(PageType.typesDesktop);
-        },
-        context: context,
-      ),
-    ],
-  );
-}
-
 Widget _sideMenuIcon(
   PageType pageType,
   IconData icon,
@@ -101,6 +70,37 @@ Widget _sideMenuIcon(
             ),
           ),
         ),
+      ),
+    ],
+  );
+}
+
+Widget _sideMenuIcons(context, Function(PageType) onPageSelected) {
+  return Column(
+    children: [
+      _sideMenuIcon(
+        PageType.virtualDesktop,
+        Icons.home_rounded,
+        () {
+          onPageSelected.call(PageType.virtualDesktop);
+        },
+        context: context,
+      ),
+      _sideMenuIcon(
+        PageType.realDesktop,
+        Icons.real_estate_agent,
+        () {
+          onPageSelected.call(PageType.realDesktop);
+        },
+        context: context,
+      ),
+      _sideMenuIcon(
+        PageType.typesDesktop,
+        Icons.file_copy_sharp,
+        () {
+          onPageSelected.call(PageType.typesDesktop);
+        },
+        context: context,
       ),
     ],
   );

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:desktop_organizer/utils/enums.dart';
 import 'package:desktop_organizer/utils/globals.dart';
 import 'package:desktop_organizer/utils/style.dart';
@@ -32,48 +30,6 @@ Widget mouseMenu({required Function onEventCompleted}) {
       ),
     ),
   );
-}
-
-Widget _mouseMenuItem(
-  IconData icon,
-  String name, {
-  required Function onClick,
-  Color? color,
-  Color? hoverColor,
-  Color? splashColor,
-}) {
-  return Expanded(
-    child: MaterialButton(
-      onPressed: () {
-        onClick.call();
-      },
-      color: color ?? backgroundColor,
-      hoverColor: hoverColor ?? purple.withAlpha(180),
-      splashColor: splashColor ?? purple,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Icon(
-            icon,
-            color: textColor,
-            size: 36,
-          ),
-          text(
-            name,
-            color: textColor,
-          ),
-        ],
-      ),
-    ),
-  );
-}
-
-List<Widget> _getMenu({required Function onEventCompleted}) {
-  return mouseMenuType == MouseMenuType.emptySlot
-      ? _emptyMenu(onEventCompleted: onEventCompleted)
-      : mouseMenuType == MouseMenuType.file
-          ? _filesMenu(onEventCompleted: onEventCompleted)
-          : _folderMenu(onEventCompleted: onEventCompleted);
 }
 
 List<Widget> _emptyMenu({required Function onEventCompleted}) {
@@ -149,4 +105,46 @@ List<Widget> _folderMenu({required Function onEventCompleted}) {
       onClick: () {},
     ),
   ];
+}
+
+List<Widget> _getMenu({required Function onEventCompleted}) {
+  return mouseMenuType == MouseMenuType.emptySlot
+      ? _emptyMenu(onEventCompleted: onEventCompleted)
+      : mouseMenuType == MouseMenuType.file
+          ? _filesMenu(onEventCompleted: onEventCompleted)
+          : _folderMenu(onEventCompleted: onEventCompleted);
+}
+
+Widget _mouseMenuItem(
+  IconData icon,
+  String name, {
+  required Function onClick,
+  Color? color,
+  Color? hoverColor,
+  Color? splashColor,
+}) {
+  return Expanded(
+    child: MaterialButton(
+      onPressed: () {
+        onClick.call();
+      },
+      color: color ?? backgroundColor,
+      hoverColor: hoverColor ?? purple.withAlpha(180),
+      splashColor: splashColor ?? purple,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          Icon(
+            icon,
+            color: textColor,
+            size: 36,
+          ),
+          text(
+            name,
+            color: textColor,
+          ),
+        ],
+      ),
+    ),
+  );
 }
