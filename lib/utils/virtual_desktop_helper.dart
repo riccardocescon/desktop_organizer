@@ -53,7 +53,7 @@ class VirtualDesktopHelper {
   }
 
   List<Item> getItems() {
-    return _currentStructure.getItems();
+    return _currentStructure.items;
   }
 
   String getRoot() {
@@ -86,6 +86,17 @@ class VirtualDesktopHelper {
       return;
     }
     openDirectory(_currentStructure.parent!.getAbsolutePath());
+  }
+
+  void removeDirectory(Item directory) {
+    var res = _currentStructure.childDirs.firstWhere(
+      (element) => element.getAbsolutePath() == directory.getAbsolutePath(),
+    );
+    _currentStructure.childDirs.remove(res);
+  }
+
+  void renameItem(Item item, String newName) {
+    item.name = newName;
   }
 
   FileStructure? _folderExists({

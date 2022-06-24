@@ -89,7 +89,10 @@ List<Widget> _folderMenu({required Function onEventCompleted}) {
     _mouseMenuItem(
       Icons.text_snippet_outlined,
       "Rename",
-      onClick: () {},
+      onClick: () {
+        VirtualDesktopHelper().renameItem(mouseItem!, "newName");
+        onEventCompleted.call();
+      },
     ),
     _mouseMenuItem(
       Icons.color_lens_rounded,
@@ -98,11 +101,14 @@ List<Widget> _folderMenu({required Function onEventCompleted}) {
     ),
     _mouseMenuItem(
       Icons.delete_rounded,
-      "Delete",
+      "Deleted",
       color: Colors.red.withAlpha(180),
       hoverColor: Colors.red,
       splashColor: Colors.redAccent,
-      onClick: () {},
+      onClick: () {
+        VirtualDesktopHelper().removeDirectory(mouseItem!);
+        onEventCompleted.call();
+      },
     ),
   ];
 }

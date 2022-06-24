@@ -28,6 +28,7 @@ class _FileViewState extends State<FileView> {
           _itemsGrid(),
           mouseMenu(
             onEventCompleted: () {
+              _hideMouseMenu();
               setState(() {});
             },
           ),
@@ -49,7 +50,8 @@ class _FileViewState extends State<FileView> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(70),
       child: _menuTapDetector(
-        menuType: MouseMenuType.file,
+        item: item,
+        menuType: MouseMenuType.folder,
         child: SizedBox(
           width: 100,
           height: 100,
@@ -111,6 +113,7 @@ class _FileViewState extends State<FileView> {
         return true;
       },
       child: _menuTapDetector(
+        item: null,
         menuType: MouseMenuType.emptySlot,
         child: GridView.builder(
           gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
@@ -129,11 +132,15 @@ class _FileViewState extends State<FileView> {
     );
   }
 
-  Widget _menuTapDetector(
-      {required MouseMenuType menuType, required Widget child}) {
+  Widget _menuTapDetector({
+    required MouseMenuType menuType,
+    required Widget child,
+    required Item? item,
+  }) {
     return GestureDetector(
       onSecondaryTap: () {
         _showMouseMenu(menuType: menuType);
+        mouseItem = item;
       },
       onSecondaryTapDown: (details) {
         getPosition(details, menuType);

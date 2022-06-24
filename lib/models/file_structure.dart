@@ -41,14 +41,5 @@ class FileStructure extends Item {
     }
   }
 
-  List<Item> getItems() {
-    List<Item> items = [];
-    for (var current in childDirs) {
-      items.add(current);
-    }
-    for (var current in childFiles) {
-      items.add(current);
-    }
-    return items;
-  }
+  List<Item> get items => [...childDirs, ...childFiles];
 }
