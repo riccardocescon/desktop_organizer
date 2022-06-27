@@ -100,8 +100,7 @@ class _HomepageState extends State<Homepage> {
                 hoverColor: purple,
                 splashColor: Colors.deepPurpleAccent,
                 child: text(
-                  "C:\\",
-                  //currentPage.getRoot(),
+                  VirtualDesktopHelper().getRoot(),
                   color: textColor,
                   fontSize: 30,
                   textAlign: TextAlign.center,

@@ -32,6 +32,10 @@ void main() {
             ),
           ),
         ),
+        textSelectionTheme: TextSelectionThemeData(
+          selectionColor: purple.withAlpha(150),
+          cursorColor: purple,
+        ),
         scaffoldBackgroundColor: backgroundColor,
       ),
       scrollBehavior: const MaterialScrollBehavior().copyWith(

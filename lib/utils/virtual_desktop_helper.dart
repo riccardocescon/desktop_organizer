@@ -25,7 +25,7 @@ class VirtualDesktopHelper {
 
   bool get isOnRoot => _currentStructure.parent != null;
 
-  void addDirectory(String path) {
+  FileStructure addDirectory(String path) {
     List<String> parts = path.split("\\");
     assert(parts.length > 1);
 
@@ -50,6 +50,15 @@ class VirtualDesktopHelper {
       }
     }
     log("Saved with path: ${reference.getAbsolutePath()}");
+    return reference;
+  }
+
+  addStructure(FileStructure structure) {
+    _virtualDesktopData.childDirs.add(structure);
+  }
+
+  String getCurrentDirectoryPath() {
+    return _currentStructure.getAbsolutePath();
   }
 
   List<Item> getItems() {
@@ -58,6 +67,36 @@ class VirtualDesktopHelper {
 
   String getRoot() {
     return _virtualDesktopData.name;
+  }
+
+  List<Item> mouseMenuOpenDirectoryAndGetItems(String path) {
+    VirtualDesktopHelper clone = VirtualDesktopHelper._internal();
+    clone._virtualDesktopData = _virtualDesktopData;
+    clone._currentStructure = _virtualDesktopData;
+    clone.openDirectory(path);
+    return clone.getItems();
+  }
+
+  void moveFilStructureWithChildrenToNewPath(
+    String oldPath,
+    String newPath,
+  ) {
+    FileStructure newStructure = addDirectory(newPath);
+    openDirectory(oldPath);
+    for (FileStructure structure in _currentStructure.childDirs) {
+      structure.parent = newStructure;
+      newStructure.childDirs.add(structure);
+    }
+    _currentStructure.childDirs.clear();
+    //get parent oldPath path
+    String parentPath = oldPath.substring(0, oldPath.lastIndexOf("\\"));
+    openDirectory(parentPath);
+
+    //get oldPath item name
+    String oldPathItemName = oldPath.substring(oldPath.lastIndexOf("\\") + 1);
+    //remove oldPath item from parent
+    _currentStructure.childDirs
+        .removeWhere((item) => item.name == oldPathItemName);
   }
 
   void openDirectory(String path) {
@@ -88,11 +127,12 @@ class VirtualDesktopHelper {
     openDirectory(_currentStructure.parent!.getAbsolutePath());
   }
 
-  void removeDirectory(Item directory) {
-    var res = _currentStructure.childDirs.firstWhere(
+  FileStructure removeDirectory(Item directory) {
+    FileStructure res = _currentStructure.childDirs.firstWhere(
       (element) => element.getAbsolutePath() == directory.getAbsolutePath(),
     );
     _currentStructure.childDirs.remove(res);
+    return res;
   }
 
   void renameItem(Item item, String newName) {

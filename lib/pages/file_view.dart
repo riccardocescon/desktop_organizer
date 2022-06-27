@@ -27,8 +27,12 @@ class _FileViewState extends State<FileView> {
         children: [
           _itemsGrid(),
           mouseMenu(
+            context: context,
             onEventCompleted: () {
               _hideMouseMenu();
+              setState(() {});
+            },
+            onSetStateRequired: () {
               setState(() {});
             },
           ),

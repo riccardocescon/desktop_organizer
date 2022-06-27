@@ -13,4 +13,12 @@ abstract class Item {
       return "${parent!.getAbsolutePath()}\\$name";
     }
   }
+
+  int getDepth() {
+    if (parent == null) {
+      return 0;
+    } else {
+      return parent!.getDepth() + 1;
+    }
+  }
 }
