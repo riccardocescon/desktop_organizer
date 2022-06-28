@@ -102,6 +102,15 @@ Widget mouseMenu({
   );
 }
 
+void _createFolderCallback(String folderName) {
+  if (folderName.isEmpty) {
+    folderName = "New Folder";
+  }
+  VirtualDesktopHelper().addDirectory(
+    "${VirtualDesktopHelper().getCurrentDirectoryPath()}\\$folderName",
+  );
+}
+
 List<Widget> _emptyMenu({
   required Function onEventCompleted,
   required Function onSetStateRequired,
@@ -112,21 +121,13 @@ List<Widget> _emptyMenu({
       Icons.create_new_folder_rounded,
       "Create Folder",
       onClick: () {
-        // TODO _ request name and create folder
+        onEventCompleted.call();
         _showFolderNameInput(
           context: context,
-          onFolderCreated: () {
-            onEventCompleted.call();
-          },
+          onConfirm: _createFolderCallback,
+          confirmText: "Create",
+          onComplete: onEventCompleted,
         );
-        /*
-        VirtualDesktopHelper().addDirectory(
-            "${VirtualDesktopHelper().getRoot()}\\Test\\Marco\\Ciao");
-        VirtualDesktopHelper().addDirectory(
-            "${VirtualDesktopHelper().getRoot()}\\Test2\\Giovanni\\Ciao");
-        VirtualDesktopHelper().addDirectory(
-            "${VirtualDesktopHelper().getRoot()}\\Test\\Marco\\Proca");
-            */
       },
       onSetStateRequired: onSetStateRequired,
     ),
@@ -171,6 +172,7 @@ List<Widget> _filesMenu({
 List<Widget> _folderMenu({
   required Function onEventCompleted,
   required Function onSetStateRequired,
+  required BuildContext context,
 }) {
   return [
     _mouseMenuItem(
@@ -184,15 +186,25 @@ List<Widget> _folderMenu({
       Icons.text_snippet_outlined,
       "Rename",
       onClick: () {
-        VirtualDesktopHelper().renameItem(mouseItem!, "newName");
         onEventCompleted.call();
+        _showFolderNameInput(
+          context: context,
+          onConfirm: _renameFolderCallback,
+          confirmText: "Rename",
+          onComplete: onEventCompleted,
+        );
       },
       onSetStateRequired: onSetStateRequired,
     ),
     _mouseMenuItem(
       Icons.color_lens_rounded,
       "Set Color",
-      onClick: () {},
+      onClick: () {
+        _showPickColorDialog(
+          context: context,
+          onComplete: onEventCompleted,
+        );
+      },
       onSetStateRequired: onSetStateRequired,
     ),
     _mouseMenuItem(
@@ -229,6 +241,7 @@ List<Widget> _getMenu({
           : _folderMenu(
               onEventCompleted: onEventCompleted,
               onSetStateRequired: onSetStateRequired,
+              context: context,
             );
 }
 
@@ -294,9 +307,39 @@ Widget _mouseMenuItem(
   );
 }
 
+void _renameFolderCallback(String folderName) {
+  if (folderName.isEmpty) {
+    return;
+  }
+  //TODO: assert other folders name is not the same as the folderName
+  VirtualDesktopHelper().renameItem(mouseItem!, folderName);
+}
+
+Widget _selectableColor(Color color, context, Function onComplete) {
+  return ClipRRect(
+    borderRadius: BorderRadius.circular(200),
+    child: SizedBox(
+      width: MediaQuery.of(context).size.width * 0.05,
+      height: MediaQuery.of(context).size.width * 0.05,
+      child: MaterialButton(
+        onPressed: () {
+          mouseItem!.color = color;
+          onComplete.call();
+          Navigator.pop(context);
+        },
+        color: color,
+        splashColor: color.withAlpha(255),
+        hoverColor: color.withAlpha(200),
+      ),
+    ),
+  );
+}
+
 void _showFolderNameInput({
   required BuildContext context,
-  required Function onFolderCreated,
+  required Function(String) onConfirm,
+  required Function onComplete,
+  required String confirmText,
 }) {
   TextEditingController nameController = TextEditingController();
   Widget dialog = AlertDialog(
@@ -320,6 +363,8 @@ void _showFolderNameInput({
             cursorColor: purple,
             style: TextStyle(
               color: textColor,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
             decoration: InputDecoration(
               border: OutlineInputBorder(
@@ -351,20 +396,14 @@ void _showFolderNameInput({
             aspectRatio: 6,
             child: MaterialButton(
               onPressed: () {
-                String folderName = nameController.text;
-                if (folderName.isEmpty) {
-                  folderName = "New Folder";
-                }
-                VirtualDesktopHelper().addDirectory(
-                  "${VirtualDesktopHelper().getCurrentDirectoryPath()}\\$folderName",
-                );
-                onFolderCreated.call();
+                onConfirm.call(nameController.text);
+                onComplete.call();
                 Navigator.pop(context);
               },
               color: purple,
               splashColor: Colors.deepPurpleAccent,
               child: Text(
-                "Create",
+                confirmText,
                 style: TextStyle(
                   color: textColor,
                   fontSize: 20,
@@ -379,6 +418,44 @@ void _showFolderNameInput({
   showDialog(
     context: context,
     builder: (context) => dialog,
+  );
+}
+
+void _showPickColorDialog({
+  required BuildContext context,
+  required Function onComplete,
+}) {
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        backgroundColor: backgroundColor,
+        title: Text(
+          "Pick Color",
+          style: TextStyle(
+            color: purple,
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.4,
+          child: AspectRatio(
+            aspectRatio: 2.5,
+            child: Wrap(
+              spacing: 20,
+              runSpacing: 20,
+              alignment: WrapAlignment.center,
+              runAlignment: WrapAlignment.center,
+              children: folderColors
+                  .map((e) => _selectableColor(e, context, onComplete))
+                  .toList(),
+            ),
+          ),
+        ),
+      );
+    },
   );
 }
 

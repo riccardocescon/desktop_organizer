@@ -65,16 +65,13 @@ class _FileViewState extends State<FileView> {
               if (item.itemType == ItemType.folder) {
                 setState(() {
                   VirtualDesktopHelper().openDirectory(item.getAbsolutePath());
-                  //widget.items =
-                  //widget.fileViewData.items = scanFolder(path: item.path);
-                  //widget.fileViewData.currentDirectory = Directory(item.path);
                   widget.onFolderChanged.call();
                 });
               }
             },
-            color: purple.withAlpha(100),
-            hoverColor: purple.withAlpha(130),
-            splashColor: purple.withAlpha(200),
+            color: item.color,
+            hoverColor: item.color.withAlpha(130),
+            splashColor: item.color.withAlpha(200),
             child: Stack(
               alignment: Alignment.center,
               children: [

@@ -1,10 +1,20 @@
 import 'package:desktop_organizer/utils/enums.dart';
+import 'package:desktop_organizer/utils/style.dart';
+import 'package:flutter/material.dart';
 
 abstract class Item {
   String name;
   ItemType itemType;
   Item? parent;
-  Item({required this.name, required this.itemType, required this.parent});
+  late Color color;
+  Item({
+    required this.name,
+    required this.itemType,
+    required this.parent,
+    Color? color,
+  }) {
+    this.color = color ?? purple.withAlpha(100);
+  }
 
   String getAbsolutePath() {
     if (parent == null) {
